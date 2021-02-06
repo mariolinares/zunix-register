@@ -44,7 +44,7 @@ exports.config = [
     {
         dm: 'D2400',
         name: 'Oficina Automatización Santi',
-        range: [10,24],
+        range: [1,2],
         sendMail: true
     },
     {

@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "http": "0.0.0",
     "moment": "^2.29.1",
+    "mongodb": "^3.6.3",
     "mongoose": "^5.11.4",
     "nodemailer": "^6.4.16",
     "omron-fins-es6": "^1.0.3",
