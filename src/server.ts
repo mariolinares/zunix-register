@@ -1,5 +1,3 @@
-import schema from './schema';
-import readTemperature from './plc'
 import { FinsClient } from 'omron-fins-es6';
 import mongoose from 'mongoose';
 import * as config from './config/config';
@@ -41,10 +39,17 @@ async function init() {
      * 
      */
 
+    let username = 'Mario';
+    let password = 'MongoPass2020';
+
+
     let cliente = new FinsClient(9610,'10.10.10.10');
         
-    mongoose.connect('mongodb+srv://maco_user:Mario12345@cluster0.aim95.mongodb.net/zunix?retryWrites=true&w=majority',  { useNewUrlParser: true })
-        .then(() => {
+    //mongoose.connect('mongodb+srv://maco_user:Mario12345@cluster0.aim95.mongodb.net/zunix?retryWrites=true&w=majority',  { useNewUrlParser: true })
+    //mongoose.connect(`mongodb://${username}:${password}@10.10.12.246/zunix?retryWrites=true&w=majority`,  { useNewUrlParser: true })
+
+    mongoose.connect(`mongodb://localhost:27017/pruebazunix`,  { useNewUrlParser: true })
+    .then(() => {
             console.log(chalk.greenBright('PLC CONNECT'))
         })
         .catch((err) => {
@@ -138,7 +143,8 @@ async function init() {
                             return
                         }
                     })
-                    
+                     */
+
                     var Inyection = new reg({
                         codigo: element.dm,
                         fechaRegistro: moment().format('DD-MM-YYYY HH:mm:ss'),
@@ -155,7 +161,7 @@ async function init() {
                         if (error) {
                             sendMail('No Inyected', moment(), error)
                         } 
-                    }) */
+                    })
 
                     if(index + 1 === data.length){
                         console.log('-----------------------------')
@@ -190,7 +196,7 @@ async function init() {
         
        
 
-    },4000)     
+    },10000)     
 } 
 
 
