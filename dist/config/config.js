@@ -1,11 +1,15 @@
 "use strict";
-exports.__esModule = true;
-exports.config = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = [
     {
         dm: 'D1100',
         name: 'Taller Eléctrico Nipi',
         range: [9, 32],
+        sendMail: false
+    },
+    {
+        dm: 'H10:00',
+        name: 'Piloto',
         sendMail: false
     },
     {
@@ -70,6 +74,6 @@ exports.config = [
     },
     {
         dm: 'D2800',
-        name: 'Sala de Juntas'
+        name: 'Sala de Juntas',
     }
 ];

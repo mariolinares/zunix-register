@@ -2,10 +2,10 @@
   "name": "registrador",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node build/server.js",
-    "build": "tsc -p . && ncp src/schema build/schema",
+    "start": "tsc && node dist/server.js",
+    "build": "tsc && node dist/server.js",
     "start:dev": "npm run build:dev",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql"
   },
@@ -14,19 +14,21 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "express": "^4.17.1",
-    "http": "0.0.0",
     "moment": "^2.29.1",
     "mongoose": "^5.11.4",
     "nodemailer": "^6.4.16",
+    "nodemon": "^2.0.7",
     "omron-fins-es6": "^1.0.3",
     "socket.io": "^2.3.0",
-    "typescript": "^3.5.2"
+    "ts-node": "^9.1.1"
   },
   "devDependencies": {
     "@types/compression": "0.0.36",
     "@types/dotenv": "^8.2.0",
-    "@types/express": "^4.17.0",
+    "@types/express": "^4.17.11",
     "@types/mongodb": "^3.6.2",
-    "@types/node": "^12.0.10"
+    "@types/node": "^12.0.10",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
   }
 }
