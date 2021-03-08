@@ -74,7 +74,7 @@ var regFail = mongoose.model('errores', failSchema);
 var reg = mongoose.model('Temperatura', bugSchema);
 setInterval(() => {
     readData();
-}, 8000);
+}, 60000);
 function writeData() {
     return __awaiter(this, void 0, void 0, function* () {
         cliente.promiseWrite('AMACXASX:00', 0)
@@ -84,13 +84,6 @@ function writeData() {
             .catch(err => console.log('error: ', err));
         cliente.promiseRead('H10:00', 1).then(d => console.log('H10:00 after write', d));
         cliente.promiseRead('H11:00', 1).then(d => console.log('H11:00 after write', d));
-    });
-}
-function writeData2() {
-    return __awaiter(this, void 0, void 0, function* () {
-        cliente.promiseRead('D2100', 1)
-            .then(data => console.log('read: ', data))
-            .catch(err => console.log('error: ', err));
     });
 }
 function readData() {
@@ -112,7 +105,7 @@ function readData() {
                 }
                 var Inyection = new reg({
                     codigo: element.dm,
-                    fechaRegistro: moment_1.default(),
+                    fechaRegistro: moment_1.default().unix(),
                     temperatura: String(temp),
                     empresa: 'Zunix'
                 });
@@ -129,7 +122,7 @@ function readData() {
                 console.log('error ', error);
                 var errorInyection = new regFail({
                     dm: element.dm,
-                    fechaRegistro: moment_1.default(),
+                    fechaRegistro: moment_1.default().unix(),
                     error: error,
                     empresa: 'Zunix'
                 });

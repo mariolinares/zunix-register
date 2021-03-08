@@ -84,7 +84,8 @@ var Schema = mongoose.Schema;
 
 var bugSchema = new Schema({
     codigo: String,
-    fechaRegistro: String,
+    fecha: String,
+    hora: String,
     temperatura: String,
     empresa: String
 });
@@ -95,7 +96,8 @@ var ErrorSchema = mongoose.Schema;
 var failSchema = new ErrorSchema({
     error: String,
     dm: String,
-    fechaRegistro: String,
+    fecha: String,
+    hora: String,
     empresa: String
 })
 
@@ -114,7 +116,7 @@ var reg = mongoose.model('Temperatura', bugSchema);
 
 setInterval(() => {
     readData()
-}, 8000)
+}, 60000)
 
 
 async function writeData() {
@@ -129,21 +131,12 @@ async function writeData() {
 
 }
 
-
-async function writeData2() {
-    cliente.promiseRead('D2100', 1)
-        .then(data => console.log('read: ', data))
-        .catch(err => console.log('error: ', err))
-}
-
-
 async function readData() {
     let data = config;
 
     data.map((element, index) => {
         cliente.promiseRead(element.dm, 1)
             .then((d) => {
-
                 let temp;
 
                 if(element.dm === 'H10:00'){
@@ -159,7 +152,8 @@ async function readData() {
 
                 var Inyection = new reg({
                     codigo: element.dm,
-                    fechaRegistro: moment(), //.format('DD-MM-YYYY HH:mm:ss'),
+                    fecha:  moment().format('DD-MM-YYYY'),
+                    hora: moment().format('HH:mm:ss'),
                     temperatura: String(temp),
                     empresa: 'Zunix'
                 });
@@ -180,8 +174,8 @@ async function readData() {
 
                 var errorInyection = new regFail({
                     dm: element.dm,
-                    fechaRegistro: moment(), // s.format('DD-MM-YYYY HH:mm:ss'),
-                    error: error,
+                    fecha:  moment().format('DD-MM-YYYY'),
+                    hora: moment().format('HH:mm:ss'),                    error: error,
                     empresa: 'Zunix'
                 })
 
