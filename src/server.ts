@@ -86,8 +86,8 @@ var bugSchema = new Schema({
     codigo: String,
     fecha: String,
     hora: String,
-    date: Date,
-    temperatura: String,
+    date: String,
+    temperatura: Number,
     empresa: String
 });
 
@@ -99,7 +99,7 @@ var failSchema = new ErrorSchema({
     dm: String,
     fecha: String,
     hora: String,
-    date: Date,
+    date: String,
     empresa: String
 })
 
