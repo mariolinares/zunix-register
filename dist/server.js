@@ -59,7 +59,9 @@ db.on('disconnected', function () {
 var Schema = mongoose.Schema;
 var bugSchema = new Schema({
     codigo: String,
-    fechaRegistro: String,
+    fecha: String,
+    hora: String,
+    date: Date,
     temperatura: String,
     empresa: String
 });
@@ -67,72 +69,24 @@ var ErrorSchema = mongoose.Schema;
 var failSchema = new ErrorSchema({
     error: String,
     dm: String,
-    fechaRegistro: String,
+    fecha: String,
+    hora: String,
+    date: Date,
     empresa: String
 });
 var regFail = mongoose.model('errores', failSchema);
 var reg = mongoose.model('Temperatura', bugSchema);
 setInterval(() => {
     readData();
-}, 60000);
-function writeData() {
-    return __awaiter(this, void 0, void 0, function* () {
-        cliente.promiseWrite('AMACXASX:00', 0)
-            .then(data => {
-            console.log('darta: ', data);
-        })
-            .catch(err => console.log('error: ', err));
-        cliente.promiseRead('H10:00', 1).then(d => console.log('H10:00 after write', d));
-        cliente.promiseRead('H11:00', 1).then(d => console.log('H11:00 after write', d));
-    });
-}
+}, 10000);
 function readData() {
     return __awaiter(this, void 0, void 0, function* () {
         let data = config_1.config;
-        data.map((element, index) => {
-            cliente.promiseRead(element.dm, 1)
-                .then((d) => {
-                let temp;
-                if (element.dm === 'H10:00') {
-                    temp = d.response.values[0];
-                }
-                else {
-                    temp = d.response.values / 10;
-                }
-                console.log('temp: ', temp);
-                if (element.sendMail && element.range && (temp < element.range[0] || temp > element.range[1])) {
-                    mailer_1.default(element.dm, moment_1.default().format('DD-MM-YYYY HH:mm:ss'), `${element.name} está fuera del rango ${element.range[0]} - ${element.range[1]}`);
-                }
-                var Inyection = new reg({
-                    codigo: element.dm,
-                    fechaRegistro: moment_1.default().unix(),
-                    temperatura: String(temp),
-                    empresa: 'Zunix'
-                });
-                Inyection.save((error, resp) => {
-                    if (error) {
-                        mailer_1.default('No Inyected', moment_1.default(), error);
-                    }
-                });
-                if (index + 1 === data.length) {
-                    console.log('-----------------------------');
-                }
-            })
-                .catch((error) => {
-                console.log('error ', error);
-                var errorInyection = new regFail({
-                    dm: element.dm,
-                    fechaRegistro: moment_1.default().unix(),
-                    error: error,
-                    empresa: 'Zunix'
-                });
-                errorInyection.save((error, doc) => {
-                    if (error) {
-                        mailer_1.default('No se ha podido guardar el error en bbdd', moment_1.default(), error);
-                    }
-                });
-                mailer_1.default(element.dm, moment_1.default(), `Lectura incorrecta en la llamada: ${error}`);
-            });
+        cliente.readMultiple('D1100', 'D1200', 'D1300', 'D1400')
+            .then((result) => {
+            console.log('el result: ', result);
+        }).catch((err) => {
+            console.log('el error: ', err);
         });
     });
 }

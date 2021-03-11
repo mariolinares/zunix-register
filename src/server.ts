@@ -86,6 +86,7 @@ var bugSchema = new Schema({
     codigo: String,
     fecha: String,
     hora: String,
+    date: Date,
     temperatura: String,
     empresa: String
 });
@@ -98,6 +99,7 @@ var failSchema = new ErrorSchema({
     dm: String,
     fecha: String,
     hora: String,
+    date: Date,
     empresa: String
 })
 
@@ -116,24 +118,12 @@ var reg = mongoose.model('Temperatura', bugSchema);
 
 setInterval(() => {
     readData()
-}, 60000)
+}, 10000)
 
 
-async function writeData() {
-    cliente.promiseWrite('AMACXASX:00', 0)
-        .then(data => {
-            console.log('darta: ', data);
-        })
-        .catch(err => console.log('error: ', err)
-        )
-    cliente.promiseRead('H10:00', 1).then(d => console.log('H10:00 after write', d))
-    cliente.promiseRead('H11:00', 1).then(d => console.log('H11:00 after write', d))
-
-}
 
 async function readData() {
     let data = config;
-
     data.map((element, index) => {
         cliente.promiseRead(element.dm, 1)
             .then((d) => {
@@ -144,7 +134,6 @@ async function readData() {
                 } else {
                     temp = d.response.values / 10;
                 }
-                console.log('temp: ', temp);
                 
                 if (element.sendMail && element.range && (temp < element.range[0] || temp > element.range[1])) {
                     sendMail(element.dm, moment().format('DD-MM-YYYY HH:mm:ss'), `${element.name} está fuera del rango ${element.range[0]} - ${element.range[1]}`)
@@ -154,9 +143,10 @@ async function readData() {
                     codigo: element.dm,
                     fecha:  moment().format('DD-MM-YYYY'),
                     hora: moment().format('HH:mm:ss'),
+                    date: moment(),
                     temperatura: String(temp),
                     empresa: 'Zunix'
-                });
+                });                
 
                 Inyection.save((error, resp) => {
                     if (error) {
@@ -175,7 +165,9 @@ async function readData() {
                 var errorInyection = new regFail({
                     dm: element.dm,
                     fecha:  moment().format('DD-MM-YYYY'),
-                    hora: moment().format('HH:mm:ss'),                    error: error,
+                    hora: moment().format('HH:mm:ss'), 
+                    date: moment(),
+                    error: error,
                     empresa: 'Zunix'
                 })
 
