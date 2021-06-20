@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
+import { userMail } from '../config/config';
 
-async function sendMail(codigo, fechaRegistro, mensaje) {
+async function sendMail(codigo, fechaRegistro, mensaje, name?) {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     let testAccount = await nodemailer.createTestAccount();
@@ -18,8 +19,8 @@ async function sendMail(codigo, fechaRegistro, mensaje) {
   
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Zunix Alertas" <mariolinares1984@gmail.com>', // sender address
-      to: "mariolinaresparra@icloud.com", // list of receivers
+      from: `Zunix Alertas Temperatura`, // sender address
+      to: userMail, // list of receivers
       subject: `${mensaje} en ${codigo}`, // Subject line
       text: `${mensaje} en ${codigo}`, // plain text body
       html: ` <img src="https://zunix.es/images/2020/06/04/logo.png" />

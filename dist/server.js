@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const omron_fins_es6_1 = require("omron-fins-es6");
-const config_1 = require("./config/config");
 const mailer_1 = __importDefault(require("./mailer"));
 const chalk_1 = __importDefault(require("chalk"));
 const moment_1 = __importDefault(require("moment"));
@@ -26,6 +25,13 @@ let mongoose = require('mongoose');
 const PORT = 3001;
 server.listen({ port: PORT }, () => console.log(`Hola Mundo  http://localhost:${PORT}/`));
 let cliente = new omron_fins_es6_1.FinsClient(9610, '10.10.10.10');
+cliente.on('reply', function (msg) {
+    console.log("Reply from: ", msg.remotehost);
+    console.log("Transaction SID: ", msg.sid);
+    console.log("Replying to issued command of: ", msg.command);
+    console.log("Response code of: ", msg.code);
+    console.log("Data returned: ", msg.values);
+});
 mongoose.connect('mongodb+srv://maco_user:Mario12345@cluster0.aim95.mongodb.net/zunix?retryWrites=true&w=majority', { useNewUrlParser: true })
     .then(() => {
     console.log(chalk_1.default.greenBright('PLC CONNECT'));
@@ -61,8 +67,8 @@ var bugSchema = new Schema({
     codigo: String,
     fecha: String,
     hora: String,
-    date: Date,
-    temperatura: String,
+    date: String,
+    temperatura: Number,
     empresa: String
 });
 var ErrorSchema = mongoose.Schema;
@@ -71,22 +77,20 @@ var failSchema = new ErrorSchema({
     dm: String,
     fecha: String,
     hora: String,
-    date: Date,
+    date: String,
     empresa: String
 });
 var regFail = mongoose.model('errores', failSchema);
 var reg = mongoose.model('Temperatura', bugSchema);
-setInterval(() => {
-    readData();
-}, 10000);
-function readData() {
+function readTemperature(element) {
     return __awaiter(this, void 0, void 0, function* () {
-        let data = config_1.config;
-        cliente.readMultiple('D1100', 'D1200', 'D1300', 'D1400')
-            .then((result) => {
-            console.log('el result: ', result);
-        }).catch((err) => {
-            console.log('el error: ', err);
-        });
+        return cliente.promiseRead(element, 1);
     });
 }
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let temperatura = yield readTemperature('D1100');
+        console.log(temperatura);
+    });
+}
+main();

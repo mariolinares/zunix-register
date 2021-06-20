@@ -1,11 +1,10 @@
-export let config = [
+export const config = [
     {
         dm: 'D1100',
         name: 'Taller Eléctrico Nipi',
-        range: [9,32],
-        sendMail: false
+        range: [1,32],
+        sendMail: true
     },
-
     {
         dm: 'H10:00',
         name: 'Piloto',
@@ -76,3 +75,8 @@ export let config = [
         name: 'Sala de Juntas',
     }
 ];
+
+export const registerTime = 60000 // 10min // 1s = 1000
+
+
+export const userMail = 'mariolinaresparra@icloud.com';
